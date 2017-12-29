@@ -5,7 +5,7 @@
     </head-bar>
     <nav class="city-nav">
       <div class="city-tip">
-        <span>当前定位城市:</span>
+        <span>当前定位城市: </span>
         <span>定位不准时, 请在城市列表中选择</span>
       </div>
       <router-link :to="'/city/' + guessCityid" class="guess-city">
@@ -17,7 +17,7 @@
     </nav>
     <section class="hot-city-wrapper">
       <h4 class="city-title">热门城市</h4>
-      <ul class="citylist-wrapper clear">
+      <ul class="citylist-wrapper">
         <router-link tag="li" v-for="item in hotcity" :to="'/city/' + item.id" :key="item.id">{{item.name}}</router-link>
       </ul>
     </section>
@@ -25,10 +25,10 @@
       <ul class="letter-classify">
         <li class="letter-classify-li" v-for="(value, key, index) in sortgroupcity" :key="key">
           <h4 class="city-title">
-            {{key}}<span v-if="index === 0">(按字母排序)</span>
+            {{key}}<span v-if="index === 0">(按字母排序) </span>
           </h4>
-          <ul class="groupcity-name-wrapper citylist-wrapper clear">
-            <router-link tag="li" v-for="item in value" :to="'/city' + item.id" :key="item.id" class="ellipsis"></router-link>
+          <ul class="groupcity-name-wrapper citylist-wrapper">
+            <router-link tag="li" v-for="item in value" :to="'/city' + item.id" :key="item.id">{{item.name}}</router-link>
           </ul>
         </li>
       </ul>
@@ -107,6 +107,34 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin.styl'
 
+  // 提取出来的公共部分样式
+  .citylist-wrapper
+    overflow: hidden
+    zoom: 1
+    li
+      float: left
+      text-align: center
+      color: $color-blue
+      border-bottom: 0.025rem solid $bgc
+      border-right: 0.025rem solid $bgc
+      wh(24.8%, 1.75rem)
+      font-size: 0.6rem
+      line-height: 1.75rem
+    li:nth-of-type(4n)
+      border-right: none
+
+  .city-title
+    color: #666
+    font-weight: 400
+    text-indent: 0.45rem
+    border-top: 2px solid $bgc
+    border-bottom: 1px solid $bgc
+    font-size: 0.55rem
+    line-height: 1.45rem
+    font-family: 'Helvetica Neue'
+    span
+      font(0.475rem, #999)
+
   .head-logo
     left: 0.4rem
     font-weight: 400
@@ -145,28 +173,7 @@
   .hot-city-wrapper
     background-color: #fff
     margin-bottom: 0.4rem
-    .citylist-wrapper
-      li
-        float: left
-        text-align: center
-        color: $color-blue
-        border-bottom: 0.025rem solid $bgc
-        border-right: 0.025rem solid $bgc
-        wh(25%, 1.75rem)
-        font-size: 0.6rem
-        line-height: 1.75rem
-      li:nth-of-type(4n)
-        border-right: none
-    .city-title
-      color: #666
-      font-weight: 400
-      text-indent: 0.45rem
-      border-top: 2px solid $bgc
-      font-size: 0.55rem
-      line-height: 1.45rem
-      font-family: 'Helvetica Neue'
-      span
-        font(0.475rem, #999)
+
   .group-city-wrapper
     .letter-classify
       .letter-classify-li
@@ -174,6 +181,11 @@
         background-color: #fff
         border-bottom: 1px solid $bgc
         .groupcity-name-wrapper
+          overflow: hidden
+          zoom: 1
           li
             color: #666
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
 </style>
