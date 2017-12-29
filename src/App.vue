@@ -8,22 +8,25 @@
     <transition name="router-fade" mode="out-in">
       <router-view v-if="!$route.meta.keepAlive"></router-view>
     </transition>
+    <svg-icon></svg-icon>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  import svgIcon from './components/common/svg'
+  export default {
+    name: 'app',
+    components: {
+      svgIcon
+    }
+  }
 </script>
 
-<style>
-#app {
-  .router-fade-enter-active, .router-fade-leave-active {
+<style scoped lang="stylus" rel="stylesheet/stylus">
+
+#app
+  .router-fade-enter-active, .router-fade-leave-active
     transition: opacity .3s;
-  }
-  .router-fade-enter, .router-fade-leave-active {
+  .router-fade-enter, .router-fade-leave-active
     opacity: 0;
-  }
-}
 </style>

@@ -28,3 +28,12 @@ export function getCityType(type) {
     return Promise.resolve(res)
   })
 }
+
+// 用户相关
+const user = '/v1/user'
+export const getUser = () => {
+  let url = baseUrl + user + ''
+  return axios.get(url).then((res) => {
+    return Promise.resolve(res)
+  })
+}

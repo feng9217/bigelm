@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
 import store from './store'
+import './config/rem.js'
 
 Vue.config.productionTip = false
 
