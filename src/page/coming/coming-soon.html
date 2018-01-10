@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>coming soon!!</title>
+</head>
+<link rel="stylesheet" type="text/css" href="./reset.css">
+<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<style type="text/css">
+  html, body{
+    height: 100%;
+    width: 100%;
+  }
+  .wrapper {
+    background-image: url('./the-ancient-town-2584222_960_720.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  .blur {
+    -webkit-filter: blur(4px);
+    -moz-filter: blur(4px);
+    -ms-filter: blur(4px);
+    filter: blur(4px);
+  }
+
+  .content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.4);
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+  }
+
+  .title-layer {
+    position: absolute;
+    top: 25%;
+    left: 10%;
+    z-index: 20;
+  }
+
+  .title-layer .infinite{
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+  }
+
+  .title {
+    margin-bottom: 25px;
+    font-size: 30px;
+    color: #233333;
+    text-shadow: 5px 5px 5px #666666;
+    cursor: default;
+    -vendor-animation-duration: 2.5s;
+    animation-duration: 2.5s;
+  }
+
+  .title:nth-child(2) {
+    margin-left: 20px;
+  }
+
+  .title:hover{
+    color: rgb(6,17,27);
+    animation: none;
+  }
+
+  .gif {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+<body>
+  <header>
+    <nav></nav>
+  </header>
+  <section class="wrapper blur">
+  </section>
+  <section class="content">
+    <div class="title-layer">
+      <h1 class="title animated tada infinite">应 用 更 新 中 ...</h1>
+      <h2 class="title animated tada infinite">预 计 一 周 后 开 放</h2>
+    </div>
+    <div class="gif animated shake infinite">
+      <img src="./6cc6995cb51bd25af37842621150acb0f55cad91.gif">
+    </div>
+  </section>
+  <footer></footer>
+</body>
+</html>

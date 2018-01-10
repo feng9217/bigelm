@@ -27,3 +27,9 @@ export const removeStore = (name) => {
 
 // 附 localStorage API
 // https://www.jianshu.com/p/39ba41ead42e
+
+// 获取style样式
+// export const getStyle = (element, attr, NumberMode = 'init') => {
+//   let target
+//   if(attr === 'scrollTop') {}
+// }

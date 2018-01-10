@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import state from './state'
 import mutations from './mutations'
-import action from './action'
+import actions from './actions'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -14,7 +14,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state,
   getters,
-  action,
+  actions,
   mutations
   // 检测state修改是否来自于mutation
   // strict: debug,

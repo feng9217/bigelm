@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <head-bar class="home">
-      <span slot='logo' class="head-logo">ele.me</span>
+  <div class="home-wrapper">
+    <head-bar class="home" signinUp='home'>
+      <span slot="logo" class="head-logo" @click="reload">ele.me</span>
     </head-bar>
     <nav class="city-nav">
       <div class="city-tip">
@@ -10,9 +10,11 @@
       </div>
       <router-link :to="'/city/' + guessCityid" class="guess-city">
         <span>{{guessCity}}</span>
-        <svg class="arrow-right">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-        </svg>
+        <div class="arrow-wrapper">
+          <svg class="arrow-right">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+          </svg>
+        </div>
       </router-link>
     </nav>
     <section class="hot-city-wrapper">
@@ -38,7 +40,8 @@
 
 <script type="text/javascript">
   import headBar from '../../components/header/head'
-  // import {cityGuess} from '../../api/getData'
+  // import scroll from '../../components/common/scroll/scroll'
+  // import {cityGuess, hotcity, groupcity} from '../../api/getData'
   import {getCityType} from '../../api/api.js'
 
   export default {
@@ -51,6 +54,23 @@
       }
     },
     mounted() {
+      // cityGuess().then(res => {
+      //   this.guessCity = res.name
+      //   this.guessCityid = res.id
+      //   console.log(this.guessCityid)
+      // })
+
+      // // 获取热门城市
+      // hotcity().then(res => {
+      //   this.hotcity = res
+      //   console.log(this.hotcity)
+      // })
+
+      // // 获取所有城市
+      // groupcity().then(res => {
+      //   this.groupcity = res
+      //   console.log(this.groupcity)
+      // })
       this.getCityGuess()
       this.getCityHot()
       this.getCityGroup()
@@ -62,6 +82,7 @@
           if (res.status === 200) {
             this.guessCity = res.data.name
             this.guessCityid = res.data.id
+            // console.log(this.guessCityid)
           }
         })
       },
@@ -78,9 +99,12 @@
         getCityType(type).then((res) => {
           if (res.status === 200) {
             this.groupcity = res.data
-            // console.log(this.groupcity)
+            // console.log(this.groupcity.Z)
           }
         })
+      },
+      reload() {
+        window.location.reload()
       }
     },
     computed: {
@@ -100,12 +124,19 @@
     },
     components: {
       headBar
+      // scroll
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin.styl'
+
+  .home-wrapper
+    background-color: #efefef
+    width: 100%
+    height: 100%
+    overflow: hidden
 
   // 提取出来的公共部分样式
   .citylist-wrapper
@@ -167,9 +198,13 @@
       font-size: 0.75rem
       span:nth-of-type(1)
         color: $color-blue
-      .arrow-right
-        wh(0.6rem, 0.6rem)
-        fill: #999
+      .arrow-wrapper
+        position: relative
+        .arrow-right
+          wh(0.6rem, 0.6rem)
+          fill: #999
+          center-ud()
+          right: -0.1rem
   .hot-city-wrapper
     background-color: #fff
     margin-bottom: 0.4rem

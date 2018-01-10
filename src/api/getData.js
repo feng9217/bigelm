@@ -4,9 +4,9 @@ import {getStore} from '../config/utils'
 // fetch 可以接收 4个参数 根据 type 不同 做不同的处理
 
 // 测试demo
-export const city = () => {
-  fetch('/v1/cities', {})
-}
+// export const city = () => {
+//   fetch('/v1/cities', {})
+// }
 
 // 获取首页默认城市
 export const cityGuess = () => {
@@ -58,4 +58,26 @@ export const getAddress = (id, sig) => {
 
 export const getAddressList = (userId) => {
   fetch('/v1/users/' + userId + '/addresses')
+}
+
+// 获取验证码
+export const getCaptchas = () => {
+  fetch('/v1/captchas', {}, 'GET')
+}
+
+// 检测账号是否存在
+export const checkExsis = (checkNumber, type) => {
+  fetch('/v1/users/exists', {
+    [type]: checkNumber,
+    type
+  })
+}
+
+// 获取短信验证码
+export const mobileCode = (phone) => {
+  fetch('/v4/mobile/verify_code/send', {
+    mobile: phone,
+    scene: 'login',
+    text: 'sms'
+  }, 'POST')
 }

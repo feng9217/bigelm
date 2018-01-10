@@ -1,25 +1,31 @@
 import {baseUrl} from './env'
 
-// async/await 是ES7的API
+// 传入 url 传参data GET/POST
+// 返回 JSON格式化后的数据: res
+// 根据需要自行取值
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
   type = type.toUpperCase()
   url = baseUrl + url
+  console.log('请求的url:')
+  console.log(url)
 
   if (type === 'GET') {
-    let dataStr = ''
-    Object.keys(data).forEach((key) => {
+    let dataStr = '' // 数据拼接字符串
+    Object.keys(data).forEach(key => {
       dataStr += key + '=' + data[key] + '&'
     })
+    // 效果如: pois?city_id=1&keyword=迪士尼&type=search
+
     if (dataStr !== '') {
       dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'))
       url = url + '?' + dataStr
     }
+    console.log('请求的拼接参数')
+    console.log(dataStr)
   }
 
-  // 传统的 XMLHttpRequest 被 Fetch 代替 是一个基于Promise的API
-  // 识别 fetch的就用fetch 不识别的就用 XMLhttpRequest
+  // 支持 fetch
   if (window.fetch && method === 'fetch') {
-    // 设置请求信息
     let requestConfig = {
       credentials: 'include',
       method: type,
@@ -30,6 +36,8 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
       mode: 'cors',
       cache: 'force-cache'
     }
+    console.log('请求头:')
+    console.log(requestConfig)
 
     if (type === 'POST') {
       Object.defineProperty(requestConfig, 'body', {
@@ -40,27 +48,29 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     try {
       const response = await fetch(url, requestConfig)
       const responseJson = await response.json()
+      console.log('返回的JSON')
+      console.log(responseJson)
       return responseJson
-    } catch (e) {
-      throw new Error(e)
+    } catch (error) {
+      throw new Error(error)
     }
   } else {
+  // 不支持 fetch
     return new Promise((resolve, reject) => {
       let requestObj
       if (window.XMLHttpRequest) {
-        // 创建一个 ajax 请求
         requestObj = new XMLHttpRequest()
       } else {
-        /* eslint-disable no-undef */
-        requestObj = new ActiveXObject()
+        requestObj = new ActiveXObject; // eslint-disable-line
       }
 
       let sendData = ''
       if (type === 'POST') {
         sendData = JSON.stringify(data)
       }
+
       requestObj.open(type, url, true)
-      requestObj.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
       requestObj.send(sendData)
 
       requestObj.onreadystatechange = () => {
@@ -70,6 +80,8 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             if (typeof obj !== 'object') {
               obj = JSON.parse(obj)
             }
+            console.log('不支持fetch时返回的 obj')
+            console.log(obj)
             resolve(obj)
           } else {
             reject(requestObj)

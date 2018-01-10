@@ -48,7 +48,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
-      favicon:'SAI_normal.png'
+      favicon:'SAI_normal.png',
       inject: true
     }),
   ]

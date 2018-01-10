@@ -1,4 +1,5 @@
 // 做对应 mutation 事件的映射
+// 把 事件从变量名 指向事件字符串
 // 记录地址
 export const RECORD_ADDRESS = 'RECORD_ADDRESS'
 // 添加
