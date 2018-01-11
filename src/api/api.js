@@ -1,5 +1,15 @@
+// 请求的完整流程: 发送请求 -> request拦截 -> response拦截 -> checkStatus -> checkCode -> 处理正确请求
+
 import axios from 'axios'
 // import {getStore} from '../config/utils'
+
+// var instance = axios.create({
+//   baseURL: 'http://cangdu.org:8001',
+//   timeout: 6000,
+//   headers: {
+//     'X-Requested-With': 'XMLHttpRequest'
+//   }
+// })
 
 const baseUrl = 'http://cangdu.org:8001'
 
@@ -122,9 +132,10 @@ export const checkExsis = (checkNumber, type) => {
 // 获取msite页面地址信息
 export const msiteAddress = (geohash) => {
   let url = baseUrl + '/v2/pois/' + geohash
-  return axios.get(url).then((res) => {
-    return Promise.resolve(res)
-  })
+  return axios.get(url)
+  // .then((res) => {
+  //   return Promise.resolve(res)
+  // })
 }
 
 // 获取msite页面食品分类列表
@@ -134,12 +145,13 @@ export const msiteFoodType = (geohash) => {
     geohash,
     group_type: '1',
     'flag[]': 'F'
-  }).then((res) => {
-    return Promise.resolve(res)
   })
+  // .then((res) => {
+  //   return Promise.resolve(res)
+  // })
 }
 
-// 获取商铺列表
+// 获取商铺列表 ????
 export const searchRes = (geohash, keyword) => {
   let url = baseUrl + '/v4/restaurants'
   return axios.get(url, {
@@ -147,5 +159,17 @@ export const searchRes = (geohash, keyword) => {
     geohash,
     keyword,
     type: 'search'
+  })
+}
+
+// 获取商铺列表
+// http://cangdu.org:8001/shopping/restaurants?latitude=31.22967&longitude=121.4762
+export const getShoplist = (latitude, longitude) => {
+  let url = baseUrl + '/shopping/restaurants'
+  return axios.get(url, {
+    params: {
+      latitude: latitude,
+      longitude: longitude
+    }
   })
 }

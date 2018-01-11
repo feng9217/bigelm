@@ -6,12 +6,12 @@ import router from './router'
 import fastclick from 'fastclick'
 import store from './store'
 import './config/rem.js'
-import swiper from 'vue-awesome-swiper'
+import VueAwsomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 
 Vue.config.productionTip = false
 
-Vue.use(swiper)
+Vue.use(VueAwsomeSwiper)
 
 fastclick.attach(document.body)
 

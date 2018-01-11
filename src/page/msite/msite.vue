@@ -25,7 +25,7 @@
         </div>
         <div class="swiper-pagination"></div>
       </div>
-      <img src="../../images/31721477_1481118336126.gif" height="44" width="76" class="fl-back animation-opacity" v-else>
+      <img src="../../images/12b927e0ae4cb690bd53a75308152beea0bc80c1.gif" height="44" width="76" class="fl-back animation-opacity" v-else>
     </nav>
     <div class="shop-list-wrapper">
       <header class="shop-header">
@@ -34,6 +34,7 @@
         </svg>
         <span class="shop-header-title">附近商家</span>
       </header>
+      <shop-list v-if="hasGetData" :geohash="geohash" :latitude="latitude" :longitude="longitude"></shop-list>
     </div>
     <foot-guide></foot-guide>
   </div>
@@ -43,6 +44,7 @@
   import {mapMutations} from 'vuex'
   import headBar from '../../components/header/head'
   import footGuide from '../../components/footer/footGuide'
+  import shopList from '../../components/common/shoplist/shoplist'
   import {getCityType, msiteAddress, msiteFoodType} from '../../api/api'
   // import swiper from 'vue-awesome-swiper'
   // import 'swiper/dist/css/swiper.css'
@@ -53,6 +55,8 @@
     data() {
       return {
         geohash: '',
+        latitude: '',
+        longitude: '',
         msiteTitle: '请选择地址...',
         foodTypes: [],
         hasGetData: false,
@@ -60,14 +64,16 @@
       }
     },
     created() {
+      this.getbasicData()
+      this.getAddress()
     },
     mounted() {
-      this.getbasicData()
       this.getFoodType()
     },
     components: {
       headBar,
-      footGuide
+      footGuide,
+      shopList
     },
     methods: {
       ...mapMutations([
@@ -91,43 +97,58 @@
             address = res
           })
           console.log(address)
-          this.geohash = address.data.latitude + ',' + address.data.longtitude
+          this.geohash = address.data.latitude + ',' + address.data.longitude
         } else {
           this.geohash = this.$route.query.geohash
         }
         // 将 geohash 存到 vuex 中
         console.log(this.geohash)
         this.SAVE_GEOHASH(this.geohash)
-        msiteAddress(this.geohash).then((res) => {
-          console.log(res, 333)
+      },
+      async getAddress() {
+        try {
+          let res = await msiteAddress(this.geohash)
+          console.log(res)
           this.msiteTitle = res.data.name
-          console.log(this.msiteTitle, 444)
+          this.latitude = res.data.latitude
+          this.longitude = res.data.longitude
           this.RECORD_ADDRESS(res.data)
           // 标志位
           this.hasGetData = true
-          console.log(this.hasGetData, 111001111)
-        })
+          console.log(this.hasGetData, this.msiteTitle)
+        } catch (e) {
+          console.log(e)
+        }
+        // .then((res) => {
+        //   console.log(res, 333)
+        //   this.msiteTitle = res.data.name
+        //   console.log(this.msiteTitle, 444)
+        //   this.RECORD_ADDRESS(res.data)
+        //   this.hasGetData = true
+        //   console.log(this.hasGetData, 111001111)
+        // })
         // console.log(this.hasGetData)
       },
-      getFoodType() {
-        msiteFoodType(this.geohash).then((res) => {
-          // console.log(res)
-          let resLength = res.data.length
-          let resArr = [...res.data]
-          // console.log(resArr)
-          let foodArr = []
-          // 分两页做slider 每页8个内容
-          for (let i = 0, j = 0; i < resLength; i += 8, j++) {
-            foodArr[j] = resArr.splice(0, 8)
-            // console.log(foodArr[j])
-          }
-          console.log(this.foodTypes.length, 555)
-          this.foodTypes = foodArr
-          console.log(this.foodTypes, 666)
-        }).then(() => {
+      async getFoodType() {
+        let res = await msiteFoodType(this.geohash)
+        // .then((res) => {
+        // console.log(res, 1)
+        let resLength = res.data.length
+        let resArr = [...res.data]
+        // console.log(resArr, 2)
+        let foodArr = []
+        // 分两页做slider 每页8个内容
+        for (let i = 0, j = 0; i < resLength; i += 8, j++) {
+          foodArr[j] = resArr.splice(0, 8)
+          console.log(foodArr[j])
+        }
+        console.log(foodArr)
+        // this.foodTypes = foodArr
+        // console.log(this.foodTypes, 4)
+        // }).then(() => {
           // let swiperslider = new swiper()
           // console.log(swiperslider)
-        })
+        // })
       }
     }
   }
@@ -194,7 +215,7 @@
   .shop-list-wrapper
     margin-top: 0.4rem
     border-top: 0.025rem solid #bgc
-    background-color: #ddd
+    background-color: #fff
     .shop-header
       .shop-icon
         fill: #999

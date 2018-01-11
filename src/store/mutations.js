@@ -12,6 +12,7 @@ const mutations = {
   }) {
     state.latitude = latitude
     state.longitude = longitude
+    console.log(state.latitude, state.longitude)
   },
 
   [types.RECORD_SHOPDETAIL](state, detail) {
