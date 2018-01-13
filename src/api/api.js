@@ -173,3 +173,46 @@ export const getShoplist = (latitude, longitude) => {
     }
   })
 }
+
+// 获取商铺信息详情
+// 示例: http://cangdu.org:8001/shopping/restaurant/1
+export const shopDetails = (shopid, latitude, longitude) => {
+  let url = baseUrl + '/shopping/restaurant/' + shopid
+  return axios.get(url, {
+    params: {
+      latitude,
+      longitude: longitude + '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+    }
+  })
+}
+
+// 获取商铺菜单列表
+// 示例: http://cangdu.org:8001/shopping/v2/menu?restaurant_id=1
+export const foodMenu = (shopid) => {
+  let url = baseUrl + '/shopping/v2/menu'
+  return axios.get(url, {
+    params: {
+      restaurant_id: shopid
+    }
+  })
+}
+
+// 获取商铺评分列表
+// 示例: http://cangdu.org:8001/ugc/v2/restaurants/1/ratings?offset=0&limit=10
+export const getRatingList = (shopid, offset, tagName = '') => {
+  let url = baseUrl + `/ugc/v2/restaurants/${shopid}/ratings`
+  return axios.get(url, {
+    params: {
+      offset,
+      limit: 10,
+      has_content: true,
+      tag_name: tagName
+    }
+  })
+}
+
+// 获取商铺评分
+export const ratingScores = (shopid) => {
+  let url = baseUrl + '/ugc/v2/restaurants/' + shopid + '/ratings/scores'
+  return axios.get(url)
+}

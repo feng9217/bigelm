@@ -4,6 +4,7 @@ import App from '../App'
 import home from '../page/home/home'
 import city from '../page/city/city'
 import login from '../page/login/login'
+import shop from '../page/shop/shop'
 
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 
@@ -41,6 +42,11 @@ export default new Router({
           path: '/msite',
           component: msite,
           meta: {keepAlive: true}
+        },
+        // 商铺详情页
+        {
+          path: '/shop',
+          component: shop
         }
       ]
     }

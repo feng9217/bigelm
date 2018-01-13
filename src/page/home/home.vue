@@ -1,7 +1,7 @@
 <template>
   <div class="home-wrapper">
     <head-bar class="home" signinUp='home'>
-      <span slot="logo" class="head-logo" @click="reload">ele.me</span>
+      <span slot="logo" class="head-logo" @click="reload">refreshMall</span>
     </head-bar>
     <nav class="city-nav">
       <div class="city-tip">

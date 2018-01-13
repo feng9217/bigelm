@@ -58,8 +58,8 @@
         latitude: '',
         longitude: '',
         msiteTitle: '请选择地址...',
-        foodTypes: [],
         hasGetData: false,
+        foodTypes: [],
         imgBaseUrl: 'https://fuss10.elemecdn.com'
       }
     },
@@ -108,7 +108,7 @@
       async getAddress() {
         try {
           let res = await msiteAddress(this.geohash)
-          console.log(res)
+          console.log(res, 1)
           this.msiteTitle = res.data.name
           this.latitude = res.data.latitude
           this.longitude = res.data.longitude
