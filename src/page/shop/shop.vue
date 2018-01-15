@@ -92,6 +92,23 @@
                       <span>{{item.name}}</span>{{item.description}}
                     </p>
                   </header>
+                  <section class="menu-detail-list" v-for="(foods, foodindex) in item.foods">
+                    <div class="menu-detail-link">
+                      <section class="menu-food-img">
+                        <img :src="imgBaseUrl + foods.image_path">
+                      </section>
+                      <section class="menu-food-description">
+                        <h3 class="food-description-head">
+                          <strong class="description-foodname">{{foods.name}}</strong>
+                          <ul v-if="foods.attributes.length" class="attributes-ul">
+                            <li v-for="(attribute, foodindex) in foods.attributes" :key="foodindex" :style="{color: '#' + attribute.icon_color, borderColor: '#' + attribute.icon_color}" :class="{'attribute-new': attribute.icon_name === '新'}">
+                              <p :style="{color: attribute.icon_name === '新' ? '#fff' : '#' +attribute.icon_color}">{{attribute.icon_name === '新' ? '新品' : attribute.icon_name}}</p>
+                            </li>
+                          </ul>
+                        </h3>
+                      </section>
+                    </div>
+                  </section>
                 </li>
               </ul>
             </section>
@@ -189,13 +206,14 @@
         this.menuIndexChange = false
       },
       showTitleDetail(index) {
+        let timer = null
         clearTimeout(timer)
         if (this.TitleDetailIndex === index) {
           this.TitleDetailIndex = null
         } else {
           this.TitleDetailIndex = index
         }
-        let timer = setTimeout(() => {
+        timer = setTimeout(() => {
           this.TitleDetailIndex = null
         }, 2000)
       },
@@ -204,14 +222,14 @@
         if (!path) {
           return 'http://test.fe.ptdev.cn/elm/elmlogo.jpeg'
         }
-        console.log(path)
+        // console.log(path)
         if (path.indexOf('jpeg') !== -1) {
           suffix = '.jpeg'
         } else {
           suffix = '.png'
         }
         let url = '/' + path.substr(0, 1) + '/' + path.substr(1, 2) + '/' + path.substr(3) + suffix
-        console.log(url)
+        // console.log(url)
         return 'https://fuss10.elemecdn.com' + url
       }
     }
@@ -430,12 +448,13 @@
                 font-weight: bold
         .menu-right
           flex: 1
+          overflow-x: hidden
           overflow-y: auto
           .menu-detail-header
             width: 100%
             padding: 0.4rem
             display: flex
-            justify-content: space-between
+            // justify-content: space-between
             align-items: center
             position: relative
             .menu-detail-header-left
@@ -455,13 +474,17 @@
               bg-image('../../images/icon_point.png')
               background-size: 100% 0.4rem
               background-position: left center
+              position: absolute
+              top: 50%
+              transform: translateY(-40%)
+              right: 1.2rem
             .description-tip
               background-color: #39373a
               opacity: 0.95
               font(0.5rem, #fff)
               position: absolute
               top: 1.5rem
-              right: 0.2rem
+              right: 0.5rem
               padding: 0.5rem 0.4rem
               border: 1px
               border-radius: 0.2rem
@@ -474,9 +497,46 @@
               position: absolute
               wh(0.4rem, 0.4rem)
               background-color: #39373a
-              top: -0.5rem
-              right: 0.7rem
+              top: 0.5rem
+              right: 1.7rem
               transform: rotate(-45deg) translateY(0.41rem)
+          .menu-detail-list
+            background-color: #fff
+            padding: 0.6rem 0.4rem
+            border-bottom: 1px solid #c8c8c8
+            .menu-detail-link
+              display: flex
+              .menu-food-img
+                margin-right: 0.4rem
+                img
+                  display: block
+                  wh(2rem, 2rem)
+              .menu-food-description
+                width: 100%
+                .food-description-head
+                  display: flex
+                  justify-content: space-between
+                  margin-bottom: 0.4rem
+                  .description-foodname
+                    font(0.7rem, #333)
+                  .attributes-ul
+                    display: flex
+                    li
+                      font-size: 0.3rem
+                      height: 0.6rem
+                      line-height: 0.35rem
+                      padding: 0.1rem
+                    .attribute-new
+                      position: absolute
+                      top: 0
+                      left: 0
+                      background-color: #4cd964
+                      wh(0.2rem, 0.2rem)
+                      display: flex
+                      align-items: flex-end
+                      transform: rotate(-45deg) translate(-0.1rem, -1.5rem)
+                      border: none
+                      border-radius: 0
 
   // transition动画
 
