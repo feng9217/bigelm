@@ -316,7 +316,7 @@
       left: 0
       width: 2rem
       height: 2rem
-      z-index: 12
+      z-index: 11
       padding-top: 0.2rem
       padding-left: 0.2rem
     .shop-detail-header
@@ -395,6 +395,7 @@
               border-radius: 0.1rem
               font-size: 0.4rem
               display: inline-block
+              margin-right: 0.04rem
           &.dian
             overflow: hidden
             text-overflow: ellipsis
