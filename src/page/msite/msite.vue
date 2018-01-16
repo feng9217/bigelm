@@ -14,16 +14,15 @@
     <nav class="msite-nav">
       <div class="swiper-container" v-if="foodTypes.length">
         <div class="swiper-wrapper">
-          <div class="swiper-slide foodtypes-wrapper" v-for="(item,index) in foodTypes" :key="index">
-            <router-link class="link-to-food" v-for="footItem in item" :key="foodItem.id" :to="{path: '/food', query: {geohash, title: foodItem.title, restaurant_category_id: getCategoryId(foodItem.link)}}">
+          <div class="swiper-slide food-type-wrapper" v-for="(item, index) in foodTypes">
+            <div class="link-to-food" v-for="foodItem in item" :key="foodItem.id">
               <figure>
                 <img :src="imgBaseUrl + foodItem.image_url">
                 <figcaption>{{foodItem.title}}</figcaption>
               </figure>
-            </router-link>
+            </div>
           </div>
         </div>
-        <div class="swiper-pagination"></div>
       </div>
       <img src="../../images/12b927e0ae4cb690bd53a75308152beea0bc80c1.gif" height="44" width="76" class="fl-back animation-opacity" v-else>
     </nav>
@@ -46,6 +45,7 @@
   import footGuide from '../../components/footer/footGuide'
   import shopList from '../../components/common/shoplist/shoplist'
   import {getCityType, msiteAddress, msiteFoodType} from '../../api/api'
+  // import {imgBaseUrl} from '../../config/env'
   // import swiper from 'vue-awesome-swiper'
   // import 'swiper/dist/css/swiper.css'
 
@@ -132,19 +132,19 @@
       async getFoodType() {
         let res = await msiteFoodType(this.geohash)
         // .then((res) => {
-        // console.log(res, 1)
+        console.log(res, 1)
         let resLength = res.data.length
         let resArr = [...res.data]
-        // console.log(resArr, 2)
+        console.log(resArr[0], 2)
         let foodArr = []
         // 分两页做slider 每页8个内容
         for (let i = 0, j = 0; i < resLength; i += 8, j++) {
           foodArr[j] = resArr.splice(0, 8)
-          console.log(foodArr[j])
+          // this.foodTypes.push(foodArr[j])
         }
-        console.log(foodArr)
-        // this.foodTypes = foodArr
-        // console.log(this.foodTypes, 4)
+        console.log(foodArr, 4)
+        this.foodTypes = foodArr
+        console.log(this.foodTypes, 5)
         // }).then(() => {
           // let swiperslider = new swiper()
           // console.log(swiperslider)
