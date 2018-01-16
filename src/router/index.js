@@ -5,6 +5,8 @@ import home from '../page/home/home'
 import city from '../page/city/city'
 import login from '../page/login/login'
 import shop from '../page/shop/shop'
+import shopDetail from '../page/shop/children/shopDetail/shopDetail'
+import foodDetail from '../page/shop/children/foodDetail/foodDetail'
 
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 
@@ -46,7 +48,17 @@ export default new Router({
         // 商铺详情页
         {
           path: '/shop',
-          component: shop
+          component: shop,
+          children: [
+            {
+              path: 'foodDetail',
+              component: foodDetail
+            },
+            {
+              path: 'shopDetail',
+              component: shopDetail
+            }
+          ]
         }
       ]
     }

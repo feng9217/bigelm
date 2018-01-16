@@ -20,7 +20,7 @@
               <p class="descript-promotion">公告: {{promotionInfo}}</p>
             </section>
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" version="1.1" class="description-arrow" >
-              <path d="M0 0 L8 7 L0 14" stroke="#fff" stroke-width="1" fill="none"/>
+              <path d="M0 0 L8 7 L0 14"   stroke="#fff" stroke-width="1" fill="none"/>
             </svg>
           </router-link>
           <footer class="descript-bottom" v-if="shopDetailInfo.activities.length" @click="showActivitiesFun">
@@ -93,7 +93,7 @@
                     </p>
                   </header>
                   <section class="menu-detail-list" v-for="(foods, foodindex) in item.foods">
-                    <div class="menu-detail-link">
+                    <router-link :to="{path: '/shop/foodDetail', query: {image_path: foods.image_path, description: foods.description, month_sales: foods.month_sales, name: foods.name, rating: foods.rating, rating_count: foods.rating_count, satisfy_rate: foods.satisfy_rate, foods, shopId}}" class="menu-detail-link">
                       <section class="menu-food-img">
                         <img :src="imgBaseUrl + foods.image_path">
                       </section>
@@ -106,16 +106,54 @@
                             </li>
                           </ul>
                         </h3>
+                        <p class="food-description-content">{{foods.description}}</p>
+                        <p class="food-description-rating">
+                          <span>月售{{foods.month_sales}}份</span>
+                          <span>好评率{{foods.satisfy_rate}}%</span>
+                        </p>
+                        <p class="food-activity" v-if="foods.activity">
+                          <span :style="{color: '#' + foods.activity.image_text_color, borderColor: '#' + foods.activity.icon_color}">{{foods.activity.image_text}}</span>
+                        </p>
                       </section>
-                    </div>
+                    </router-link>
+                    <footer class="menu-detail-footer">
+                      <section class="food-price">
+                        <span>¥</span>
+                        <span>{{foods.specfoods[0].price}}</span>
+                        <span v-if="foods.specifications.length">起</span>
+                      </section>
+                      <div>购物车组件</div>
+                    </footer>
                   </section>
                 </li>
               </ul>
             </section>
           </section>
+          <section class="buy-cart-wrapper">
+            <section class="cart-icon-num">
+              <div class="cart-icon-wrapper">
+                <span class="cart-list-length" v-if="totalNum">{{totalNum}}</span>
+                <svg class="cart-icon">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-icon"></use>
+                </svg>
+              </div>
+              <div class="cart-num">
+                <div>¥{{totalPrice}}</div>
+                <div>配送费¥{{deliveryFee}}</div>
+              </div>
+            </section>
+            <section class="gotopay" :class="{'gotopay-activity': minimumOrderAmount <= 0}">
+              <span class="gotopay-button" v-if="minimumOrderAmount > 0">还差¥{{minimumOrderAmount}}起送</span>
+              <router-link :to="{path: 'confirmOrder', query: {geohash, shopId}}" class="gotopay-button" v-else>去结算</router-link>
+            </section>
+          </section>
         </section>
       </transition>
     </section>
+    <transition name="router-slide" mode="out-in">
+      <!-- 没有 router-view 页面中的 router-link都只会跳转 不会渲染 -->
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -123,6 +161,7 @@
   import {msiteAddress, shopDetails, foodMenu, getRatingList, ratingScores} from '../../api/api'
   import {mapState, mapMutations} from 'vuex'
   import {imgBaseUrl} from '../../config/env'
+  import {setStore} from '../../config/utils'
 
   export default {
     data() {
@@ -141,7 +180,9 @@
         categoryNum: [], // 商品类型右上角已加入购物车的数量
         menuIndex: 0, // 选择的菜单分类
         menuIndexChange: false, // flag 控制listenScroll
-        TitleDetailIndex: null // 点击展示列表头部详细
+        TitleDetailIndex: null, // 点击展示列表头部详细
+        cartFoodList: [], // 购物车商品列表
+        totalPrice: 0 // 总共价格
       }
     },
     created() {
@@ -158,6 +199,28 @@
       ]),
       promotionInfo() {
         return this.shopDetailInfo.promotion_info || '商户公告没信息噢 我是字数补丁'
+      },
+      totalNum() {
+        let num = 0
+        this.cartFoodList.forEach((item) => {
+          num += item.num
+        })
+        return num
+      },
+      // 配送费
+      deliveryFee() {
+        if (this.shopDetailInfo) {
+          return this.shopDetailInfo.float_delivery_fee
+        } else {
+          return null
+        }
+      },
+      minimumOrderAmount() {
+        if (this.shopDetailInfo) {
+          return this.shopDetailInfo.float_minimum_order_amount - this.totalPrice
+        } else {
+          return null
+        }
       }
     },
     methods: {
@@ -177,19 +240,20 @@
         this.shopDetailInfo = res.data
         console.log(this.shopDetailInfo, 1)
         // 获取商铺食品列表
-        res = await foodMenu(this.shopId)
-        this.foodMenu = res.data
+        let menu = await foodMenu(this.shopId)
+        this.foodMenu = menu.data
         console.log(this.foodMenu, 2)
         // 评论列表
-        res = await getRatingList(this.shopId, this.ratingOffset)
-        this.ratingList = res.data
+        let list = await getRatingList(this.shopId, this.ratingOffset)
+        this.ratingList = list.data
         console.log(this.ratingList, 3)
         // 商铺评论详情
-        res = await ratingScores(this.shopId)
-        this.ratingScoresData = res.data
+        let score = await ratingScores(this.shopId)
+        this.ratingScoresData = score.data
         console.log(this.ratingScoresData, 4)
         // 评论 tag 列表
         this.RECORD_SHOPDETAIL(this.shopDetailInfo)
+        setStore('shopDetail', this.shopDetailInfo)
         this.hasGetData = true
       },
       goback() {
@@ -516,7 +580,7 @@
                 .food-description-head
                   display: flex
                   justify-content: space-between
-                  margin-bottom: 0.4rem
+                  margin-bottom: 0.2rem
                   .description-foodname
                     font(0.7rem, #333)
                   .attributes-ul
@@ -526,6 +590,8 @@
                       height: 0.6rem
                       line-height: 0.35rem
                       padding: 0.1rem
+                      p
+                        white-space
                     .attribute-new
                       position: absolute
                       top: 0
@@ -537,6 +603,105 @@
                       transform: rotate(-45deg) translate(-0.1rem, -1.5rem)
                       border: none
                       border-radius: 0
+                      p
+                        font(0.4rem, #fff)
+                        text-align: center
+                        flex: 1
+                .food-description-content
+                  font(0.5rem, #999)
+                  line-height: 0.6rem
+                .food-description-rating
+                  line-height: 0.8rem
+                  span
+                    font(0.5rem, #333)
+                .food-activity
+                  line-height: 0.4rem
+                  span
+                    font-size: 0.3rem
+                    border: 1px solid currentColor
+                    border-radius: 0.3rem
+                    padding: 0.08rem
+                    display: inline-block
+                    transform: scale(0.8)
+                    margin-left: -0.35rem
+            .menu-detail-footer
+              margin-left: 2.4rem
+              font-size: 0
+              margin-top: 0.3rem
+              display: flex
+              justify-content: space-between
+              .food-price
+                span
+                  font-family: 'Helvetica Neue', Tahoma,Arial
+                span:nth-of-type(1)
+                  font(0.5rem, #f60)
+                  margin-right: 0.05rem
+                span:nth-of-type(2)
+                  font(0.7rem, #f60)
+                  font-weight: bold
+                  margin-right: 0.3rem
+                span:nth-of-type(3)
+                  font(0.5rem, #666)
+      .buy-cart-wrapper
+        position: absolute
+        background-color: #3d3d3f
+        bottom: 0
+        left: 0
+        z-index: 13
+        display: flex
+        wh(100%, 2rem)
+        .cart-icon-num
+          flex: 1
+          .cart-icon-wrapper
+            display: flex
+            background-color: #3d3d3f
+            padding: 0.4rem
+            border: 0.18rem solid #444
+            border-radius: 50%
+            position: absolute
+            left: 0.5rem
+            top: -0.7rem
+            .cart-icon
+              wh(1.2rem, 1.2rem)
+            .cart-list-length
+              position: absolute
+              top: -0.25rem
+              right: -0.25rem
+              background: #ff461d
+              line-height: 0.7rem
+              text-align: center
+              border: 0.025rem solid #ff461d
+              border-radius: 50%
+              min-width: 0.7rem
+              height: 0.7rem
+              font(0.5rem, #fff)
+          .cart-num
+            position: absolute
+            top: 50%
+            transform: translateY(-50%)
+            left: 3.5rem
+            div
+              color: #fff
+            div:nth-of-type(1)
+              font-size: 0.8rem
+              font-weight: bold
+              margin-bottom: 0.2rem
+            div:nth-of-type(2)
+              font-size: 0.4rem
+        .gotopay
+          position: absolute
+          right: 0
+          background-color: #a1a1a9
+          wh(5rem, 100%)
+          text-align: center
+          display: flex
+          align-items: center
+          justify-content: center
+          .gotopay-button
+            font(0.7rem, #fff)
+            font-weight: bold
+          &.gotopay-activity
+            background-color: #4cd964
 
   // transition动画
 
@@ -556,6 +721,15 @@
         display: none;
     }
   .fade-choose-enter, .fade-choose-leave-active{
+    opacity: 0
+  }
+
+  // router-slide
+  .router-slide-enter-active, .router-slide-leave-active {
+    transition: all .4s
+  }
+  .router-slide-enter, .router-slide-leave-active {
+    transform: translate3d(2rem, 0, 0)
     opacity: 0
   }
 
