@@ -13,16 +13,17 @@
     </head-bar>
     <nav class="msite-nav">
       <div class="swiper-container" v-if="foodTypes.length">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide food-type-wrapper" v-for="(item, index) in foodTypes">
+        <swiper class="swiper-wrapper" ref="mySwiper" :options="swiperOption">
+          <swiper-slide class="swiper-slide food-type-wrapper" v-for="(item, index) in foodTypes" :key="index">
             <div class="link-to-food" v-for="foodItem in item" :key="foodItem.id">
               <figure>
                 <img :src="imgBaseUrl + foodItem.image_url">
                 <figcaption>{{foodItem.title}}</figcaption>
               </figure>
             </div>
-          </div>
-        </div>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+        </swiper>
       </div>
       <img src="../../images/12b927e0ae4cb690bd53a75308152beea0bc80c1.gif" height="44" width="76" class="fl-back animation-opacity" v-else>
     </nav>
@@ -48,8 +49,18 @@
   // import {imgBaseUrl} from '../../config/env'
   // import swiper from 'vue-awesome-swiper'
   // import 'swiper/dist/css/swiper.css'
-
   // Vue.use(swiper)
+  import {swiper, swiperSlide} from 'vue-awesome-swiper'
+  // 在main.js中引入了 swiper.css
+  import 'swiper/dist/css/swiper.css'
+
+  // 使用 vue-awesome-swiper 需要以下步骤:
+  // 1.在main.js中导入并Vue.use(该插件)
+  // 2.在要使用的组件中 引入{swiper, swiperSlide} 在组件中 swiper标签包裹整个swiper, swiperSlide包裹滑动的部分, 还有一个pagination没显示出来 and I don't know why
+  // 3. 需要在 <swiper>中传入 :options 配置信息, autoplay设为true才会自动轮播, 设3000动都不动也是个迷
+  // 4. 还有 传说中需要 npm install less-loader 才会正确加载样式 但目前对我的使用并没有产生什么变化 ???
+  // 5. 解决了 回退到了 2.5.4的版本 autoplay: 5000, pagination 都解决了 之前是 3.1.0 fvck!!!
+  // 6. 特别重要的一点 swiper的样式是在 mounted注入的 所以千万不要在组件的样式头中加入 scoped !!!!!!
 
   export default {
     data() {
@@ -60,7 +71,26 @@
         msiteTitle: '请选择地址...',
         hasGetData: false,
         foodTypes: [],
-        imgBaseUrl: 'https://fuss10.elemecdn.com'
+        imgBaseUrl: 'https://fuss10.elemecdn.com',
+        swiperOption: {
+          notNextTick: true,
+          pagination: '.swiper-pagination',
+          paginationType: 'bullets',
+          autoplay: 4000,
+          speed: 400,
+          loop: true,
+          grabCursor: true,
+          setWrapperSize: true,
+          autoHeight: true,
+          paginationClickable: true,
+          slidesPerView: 'auto',
+          centeredSlides: true,
+          onSlideChangeEnd: swiper => {
+            // 这个位置放swiper的回调方法
+            this.page = swiper.realIndex + 1
+            this.index = swiper.realIndex
+          }
+        }
       }
     },
     created() {
@@ -69,11 +99,19 @@
     },
     mounted() {
       this.getFoodType()
+      this.swiper.slideTo(3, 1000, false)
     },
     components: {
       headBar,
       footGuide,
-      shopList
+      shopList,
+      swiper,
+      swiperSlide
+    },
+    computed: {
+      swiper() {
+        return this.$refs.mySwiper.swiper
+      }
     },
     methods: {
       ...mapMutations([
@@ -154,7 +192,7 @@
   }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin.styl'
 
   .link-search
@@ -191,7 +229,7 @@
       wh(100%, auto)
       padding-bottom: 0.6rem
       .swiper-wrapper
-        .foodtypes-wrapper
+        .food-type-wrapper
           display: flex
           flex-wrap: wrap
           .link-to-food
@@ -207,7 +245,7 @@
                 text-align: center
                 font(0.55rem, #666)
       .swiper-pagination
-        bottom: 0.2rem
+        bottom: 0
     .fl-back
       wh(100%, 100%)
     .animation-opacity
