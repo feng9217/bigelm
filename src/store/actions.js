@@ -3,12 +3,13 @@ import {GET_USERINFO} from './mutation-types.js'
 
 export default {
   async getUserInfo({commit, state}) {
-    let res = null
-    getUser().then((responce) => {
-      // console.log(responce)
-      res = responce.data
-      console.log(res)
-    })
+    let res = await getUser()
+    console.log(res)
+    // getUser().then((responce) => {
+    //   // console.log(responce)
+    //   res = responce.data
+    //   console.log(res)
+    // })
     commit(GET_USERINFO, res)
   }
   // async saveAddress({commit, state}) {

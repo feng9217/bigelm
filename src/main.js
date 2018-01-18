@@ -16,11 +16,14 @@ Vue.use(VueAwsomeSwiper)
 Vue.use(VueAMap)
 
 fastclick.attach(document.body)
-VueAMap.initAMapApiLoader({
-  key: '177a43af998ed35c450eff81aa61e555', // your key
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.Geolocation'] // 引入的插件
+setTimeout(() => {
+  VueAMap.initAMapApiLoader({
+    key: '177a43af998ed35c450eff81aa61e555', // your key
+    plugin: ['Autocomplete', 'PlaceSearch', 'Scale', 'OverView', 'ToolBar', 'MapType', 'PolyEditor', 'CircleEditor', 'Geolocation'], // 引入的插件
+    uiVersion: '1.0' // 引入ui库
+  }, 0)
+  console.log(VueAMap)
 })
-console.log(VueAMap)
 // ------
 // let createMap = () => {
 //   const promise = new Promise(function (resolve, reject) {

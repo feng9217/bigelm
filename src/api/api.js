@@ -67,10 +67,11 @@ const user = '/v1/user'
 // 获取用户信息
 export const getUser = () => {
   let url = baseUrl + user + ''
-  return axios.get(url).then((res) => {
-    // console.log(res)
-    return Promise.resolve(res)
-  })
+  return axios.get(url)
+  // .then((res) => {
+  //   // console.log(res)
+  //   return Promise.resolve(res)
+  // })
 }
 
 // 搜索地址

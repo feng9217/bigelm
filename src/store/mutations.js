@@ -106,7 +106,7 @@ const mutations = {
     if (!state.login) {
       return
     }
-    if (!info.message) { // eslint-disable-line
+    if (!info.message) {
       state.userInfo = {...info}
     } else {
       state.userInfo = null

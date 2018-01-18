@@ -2,7 +2,12 @@
   <div class="map-page">
     <head-bar :headTitle="'附近的售货机'" :goBack="true"></head-bar>
     <div class="amap-wrapper">
-      <el-amap id="amap-page" :vid="amap-vue"ref="map">
+      <el-amap id="amap-page"
+      :vid="amap-vue"ref="map"
+      :zoom="zoom"
+      :resizeEnable="resizeEnable"
+      :plugin="plugin">
+        <el-amap-marker v-for="(marker, index) in markers" :position="marker.position" :key="index" :vid="index" :events="events" :draggable="draggable" :clickable="clickable"></el-amap-marker>
       </el-amap>
     </div>
   </div>
@@ -20,7 +25,50 @@
 
   export default {
     data() {
-      return {}
+      return {
+        zoom: 15,
+        resizeEnable: true,
+        center: [113.33956, 23.17601],
+        events: {
+          click: (e) => {
+            console.log('我被点击啦')
+            console.log(e)
+          }
+        },
+        draggable: false,
+        clickable: true,
+        markers: [
+          {
+            name: 'a',
+            position: [113.34256, 23.17801]
+          },
+          {
+            name: 'b',
+            position: [113.33356, 23.17401]
+          },
+          {
+            name: 'c',
+            position: [113.33856, 23.17201]
+          },
+          {
+            name: 'd',
+            position: [113.34056, 23.18001]
+          }
+        ],
+        plugin: [
+          {
+            pName: 'ToolBar'
+          },
+          {
+            pName: 'Geolocation',
+            events: {
+              init(o) {
+                o.getCurrentPosition((status, result) => {})
+              }
+            }
+          }
+        ]
+      }
     },
     mounted() {},
     components: {
@@ -38,6 +86,9 @@
       //     map.addControl(new AMap.Geolocation())
       //   })
       // }
+      dosomeThing() {
+        console.log('点击到我啦')
+      }
     }
   }
 </script>
