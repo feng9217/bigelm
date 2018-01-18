@@ -25,7 +25,7 @@
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
       </div>
-      <img src="../../images/12b927e0ae4cb690bd53a75308152beea0bc80c1.gif" height="44" width="76" class="fl-back animation-opacity" v-else>
+      <img src="../../images/fl.svg" height="44" width="76" class="fl-back animation-opacity" v-else>
     </nav>
     <div class="shop-list-wrapper">
       <header class="shop-header">

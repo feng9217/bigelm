@@ -7,6 +7,7 @@ import login from '../page/login/login'
 import shop from '../page/shop/shop'
 import shopDetail from '../page/shop/children/shopDetail/shopDetail'
 import foodDetail from '../page/shop/children/foodDetail/foodDetail'
+import search from '../page/search/searchMap'
 
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 
@@ -59,6 +60,11 @@ export default new Router({
               component: shopDetail
             }
           ]
+        },
+        // 搜索页
+        {
+          path: '/search',
+          component: search
         }
       ]
     }
