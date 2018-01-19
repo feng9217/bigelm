@@ -103,6 +103,7 @@
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
+      padding-bottom: 0.35rem
       .text
         font(0.8rem, #fff)
         text-align: center
